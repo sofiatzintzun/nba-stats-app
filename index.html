@@ -28,6 +28,7 @@ async function buscarJugador() {
   const nombre = document.getElementById("playerName").value;
 
   const res = await fetch("https://script.google.com/macros/s/AKfycbwOBvtxJrlZL-XAQEU_aU6YYxCGQH1wum3CEPga5DwWQWnwHB7XSKrwY25xVzANK-dvVQ/exec?name=" + nombre);
+  
   const data = await res.json();
 
   const tabla = document.getElementById("tabla");
@@ -40,48 +41,6 @@ async function buscarJugador() {
         <td>${game.pts}</td>
         <td>${game.reb}</td>
         <td>${game.ast}</td>
-      </tr>
-    `;
-    tabla.innerHTML += row;
-  });
-}
-
-  const data = await res.json();
-  const players = data.resultSets[0].rowSet;
-
-  const player = players.find(p => p[2].toLowerCase().includes(nombre.toLowerCase()));
-
-  if (!player) {
-    alert("Jugador no encontrado");
-    return;
-  }
-
-  const playerId = player[0];
-
-  // 🔥 2. obtener últimos juegos
-  const resStats = await fetch(`https://stats.nba.com/stats/playergamelog?PlayerID=${playerId}&Season=2024-25`, {
-    headers: {
-      "User-Agent": "Mozilla/5.0",
-      "Referer": "https://www.nba.com/",
-      "Accept": "application/json"
-    }
-  });
-
-  const statsData = await resStats.json();
-  const games = statsData.resultSets[0].rowSet;
-
-  const ultimos5 = games.slice(0, 5);
-
-  const tabla = document.getElementById("tabla");
-  tabla.innerHTML = "";
-
-  ultimos5.forEach(game => {
-    const row = `
-      <tr>
-        <td>${game[3]}</td> <!-- fecha -->
-        <td>${game[24]}</td> <!-- pts -->
-        <td>${game[18]}</td> <!-- reb -->
-        <td>${game[19]}</td> <!-- ast -->
       </tr>
     `;
     tabla.innerHTML += row;
