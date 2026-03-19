@@ -27,7 +27,7 @@
 async function buscarJugador() {
   const nombre = document.getElementById("playerName").value;
 
-  const res = await fetch("https://script.google.com/macros/s/AKfycbwOBvtxJrlZL-XAQEU_aU6YYxCGQH1wum3CEPga5DwWQWnwHB7XSKrwY25xVzANK-dvVQ/exec?name=" + nombre);
+  const res = await fetch("AKfycbwOBvtxJrlZL-XAQEU_aU6YYxCGQH1wum3CEPga5DwWQWnwHB7XSKrwY25xVzANK-dvVQ?name=" + nombre);
   
   const data = await res.json();
 
