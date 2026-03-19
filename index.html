@@ -22,7 +22,7 @@ async function buscarJugador() {
 
   const playerId = dataPlayer.response[0].id;
 
-  const resStats = await fetch(`https://api-nba-v1.p.rapidapi.com/players/statistics?id=${playerId}&season=2024`, {
+  const resStats = await fetch(`https://api-basketball-nba.p.rapidapi.com/player/advanced-stats?playerId=1966' \`, {
     method: "GET",
     headers: {
       "x-rapidapi-key": API_KEY,
