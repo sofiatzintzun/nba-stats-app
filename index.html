@@ -1,45 +1,53 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>NBA Stats Oficial</title>
-</head>
-<body>
-
-<h2>Buscar jugador NBA</h2>
-
-<input type="text" id="playerName" placeholder="Ej: LeBron James">
-<button onclick="buscarJugador()">Buscar</button>
-
-<table border="1">
-  <thead>
-    <tr>
-      <th>Fecha</th>
-      <th>PTS</th>
-      <th>REB</th>
-      <th>AST</th>
-    </tr>
-  </thead>
-  <tbody id="tabla"></tbody>
-</table>
-
 <script>
+
+const API_KEY = "f98f094e27msh7da89bc57ead6bcp1a3a25jsn860890ab2ae";
 
 async function buscarJugador() {
   const nombre = document.getElementById("playerName").value;
 
-  const res = await fetch("https://script.google.com/macros/s/AKfycbwOBvtxJrlZL-XAQEU_aU6YYxCGQH1wum3CEPga5DwWQWnwHB7XSKrwY25xVzANK-dvVQ/exec?name=" + nombre)
-  const data = await res.json();
+  const resPlayer = await fetch(`https://api-nba-v1.p.rapidapi.com/players?search=${nombre}`, {
+    method: "GET",
+    headers: {
+      "x-rapidapi-key": API_KEY,
+      "x-rapidapi-host": "api-nba-v1.p.rapidapi.com"
+    }
+  });
+
+  const dataPlayer = await resPlayer.json();
+
+  if (!dataPlayer.response.length) {
+    alert("Jugador no encontrado");
+    return;
+  }
+
+  const playerId = dataPlayer.response[0].id;
+
+  const resStats = await fetch(`https://api-nba-v1.p.rapidapi.com/players/statistics?id=${playerId}&season=2024`, {
+    method: "GET",
+    headers: {
+      "x-rapidapi-key": API_KEY,
+      "x-rapidapi-host": "api-nba-v1.p.rapidapi.com"
+    }
+  });
+
+  const dataStats = await resStats.json();
+
+  const games = dataStats.response;
+
+  games.sort((a, b) => new Date(b.game.date.start) - new Date(a.game.date.start));
+
+  const ultimos5 = games.slice(0, 5);
 
   const tabla = document.getElementById("tabla");
   tabla.innerHTML = "";
 
-  data.forEach(game => {
+  ultimos5.forEach(game => {
     const row = `
       <tr>
-        <td>${game.fecha}</td>
-        <td>${game.pts}</td>
-        <td>${game.reb}</td>
-        <td>${game.ast}</td>
+        <td>${game.game.date.start}</td>
+        <td>${game.points}</td>
+        <td>${game.totReb}</td>
+        <td>${game.assists}</td>
       </tr>
     `;
     tabla.innerHTML += row;
@@ -47,6 +55,3 @@ async function buscarJugador() {
 }
 
 </script>
-
-</body>
-</html>
